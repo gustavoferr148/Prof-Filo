@@ -6,16 +6,48 @@ import plotly.graph_objects as go
 st.set_page_config(page_title="Simulador de Pontuação", layout="centered")
 
 st.title("Calculadora Interativa de Renda")
-st.write("Arraste o slider ou digite um valor de renda para ver a pontuação calculada em tempo real.")
+st.write("Arraste a barra ou digite o valor exato na caixinha para calcular a pontuação em tempo real.")
 
-# 2. Entrada de Dados
-renda = st.slider(
-    "Renda Líquida Per Capita (R$)", 
-    min_value=0.0, 
-    max_value=12000.0, 
-    value=2818.55, 
-    step=50.0
-)
+# --- LÓGICA DE SINCRONIZAÇÃO ENTRE SLIDER E CAIXA DE TEXTO ---
+# Inicializa o valor padrão caso o app acabe de abrir
+if 'renda' not in st.session_state:
+    st.session_state.renda = 2818.55
+
+# Funções que rodam quando o usuário mexe em um dos componentes
+def atualiza_pelo_slider():
+    st.session_state.renda = st.session_state.slider_input
+
+def atualiza_pela_caixa():
+    st.session_state.renda = st.session_state.caixa_input
+# ------------------------------------------------------------
+
+# 2. Entrada de Dados (Criando colunas para ficarem lado a lado)
+col_slider, col_caixa = st.columns([3, 1])
+
+with col_slider:
+    st.slider(
+        "Arraste para ajustar:", 
+        min_value=0.0, 
+        max_value=12000.0, 
+        step=1.0,
+        key="slider_input",
+        value=st.session_state.renda,
+        on_change=atualiza_pelo_slider
+    )
+
+with col_caixa:
+    st.number_input(
+        "Ou digite aqui:", 
+        min_value=0.0, 
+        max_value=12000.0, 
+        step=1.0,
+        key="caixa_input",
+        value=st.session_state.renda,
+        on_change=atualiza_pela_caixa
+    )
+
+# A variável 'renda' oficial do cálculo assume o valor sincronizado
+renda = st.session_state.renda
 
 # 3. Lógica do Score e Regra de Negócio (Cap)
 LIMITE_SUPERIOR = 5637.10
@@ -27,7 +59,7 @@ else:
     pontuacao = 0.0
     zona = "Zona de Outliers / Cap (0)"
 
-# 4. Exibição dos Resultados
+# 4. Exibição dos Resultados (Cards)
 col1, col2, col3 = st.columns(3)
 
 with col1:
