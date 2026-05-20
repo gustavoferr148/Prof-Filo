@@ -1,30 +1,40 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+import os
 
 # 1. Configuração da página
-st.set_page_config(page_title="Calculadora da Pontuação pela Renda", layout="centered")
+st.set_page_config(page_title="Simulador JR Consultoria", layout="centered")
 
-st.title("Calculadora da Pontuação pela Renda")
-st.write("Arraste a barra ou digite o valor exato na caixinha para calcular a pontuação em tempo real.")
+# --- SEÇÃO DE BRANDING (LOGO) ---
+# Verifica se a imagem existe na pasta para não dar erro
+if os.path.exists("logo_jr.png"):
+    # Centraliza a logo usando colunas
+    col_l1, col_l2, col_l3 = st.columns([1, 1, 1])
+    with col_l2:
+        st.image("logo_jr.png", width=200)
+else:
+    # Caso você ainda não tenha subido a imagem, ele apenas pula
+    st.write("*(Logo JR Consultoria)*") 
+# --------------------------------
 
-# --- CORREÇÃO DA SINCRONIZAÇÃO (BIDIRECIONAL PERFEITA) ---
-# Inicializamos a memória de cada componente com o mesmo valor padrão
+st.markdown("<h1 style='text-align: center;'>Calculadora Interativa de Renda</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #888;'>Solução personalizada desenvolvida pela JR Consultoria</p>", unsafe_allow_html=True)
+st.write("---")
+
+# --- LÓGICA DE SINCRONIZAÇÃO (BIDIRECIONAL) ---
 if 'valor_slider' not in st.session_state:
     st.session_state.valor_slider = 2818.55
 if 'valor_caixa' not in st.session_state:
     st.session_state.valor_caixa = 2818.55
 
-# Quando a barra se move, ela força a caixinha a receber o mesmo valor
 def slider_mudou():
     st.session_state.valor_caixa = st.session_state.valor_slider
 
-# Quando a caixinha é digitada, ela força a barra a ir para a mesma posição
 def caixa_mudou():
     st.session_state.valor_slider = st.session_state.valor_caixa
-# -----------------------------------------------------------
 
-# 2. Entrada de Dados (Colunas lado a lado)
+# 2. Entrada de Dados
 col_slider, col_caixa = st.columns([3, 1])
 
 with col_slider:
@@ -47,7 +57,6 @@ with col_caixa:
         on_change=caixa_mudou
     )
 
-# A renda oficial para o cálculo usa o estado sincronizado
 renda = st.session_state.valor_slider
 
 # 3. Lógica do Score e Regra de Negócio (Cap)
@@ -61,6 +70,7 @@ else:
     zona = "Zona de Outliers / Cap (0)"
 
 # 4. Exibição dos Resultados (Cards)
+st.write("")
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -102,3 +112,6 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+# Rodapé discreto
+st.markdown("<br><hr><center><small>JR Consultoria - Inteligência em Dados</small></center>", unsafe_allow_html=True)
