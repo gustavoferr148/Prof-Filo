@@ -3,25 +3,28 @@ import numpy as np
 import plotly.graph_objects as go
 
 # 1. Configuração da página
-st.set_page_config(page_title="Simulador de Pontuação", layout="centered")
+st.set_page_config(page_title="Calculadora da Pontuação pela Renda", layout="centered")
 
-st.title("Calculadora Interativa de Renda")
+st.title("Calculadora da Pontuação pela Renda")
 st.write("Arraste a barra ou digite o valor exato na caixinha para calcular a pontuação em tempo real.")
 
-# --- LÓGICA DE SINCRONIZAÇÃO ENTRE SLIDER E CAIXA DE TEXTO ---
-# Inicializa o valor padrão caso o app acabe de abrir
-if 'renda' not in st.session_state:
-    st.session_state.renda = 2818.55
+# --- CORREÇÃO DA SINCRONIZAÇÃO (BIDIRECIONAL PERFEITA) ---
+# Inicializamos a memória de cada componente com o mesmo valor padrão
+if 'valor_slider' not in st.session_state:
+    st.session_state.valor_slider = 2818.55
+if 'valor_caixa' not in st.session_state:
+    st.session_state.valor_caixa = 2818.55
 
-# Funções que rodam quando o usuário mexe em um dos componentes
-def atualiza_pelo_slider():
-    st.session_state.renda = st.session_state.slider_input
+# Quando a barra se move, ela força a caixinha a receber o mesmo valor
+def slider_mudou():
+    st.session_state.valor_caixa = st.session_state.valor_slider
 
-def atualiza_pela_caixa():
-    st.session_state.renda = st.session_state.caixa_input
-# ------------------------------------------------------------
+# Quando a caixinha é digitada, ela força a barra a ir para a mesma posição
+def caixa_mudou():
+    st.session_state.valor_slider = st.session_state.valor_caixa
+# -----------------------------------------------------------
 
-# 2. Entrada de Dados (Criando colunas para ficarem lado a lado)
+# 2. Entrada de Dados (Colunas lado a lado)
 col_slider, col_caixa = st.columns([3, 1])
 
 with col_slider:
@@ -30,9 +33,8 @@ with col_slider:
         min_value=0.0, 
         max_value=12000.0, 
         step=1.0,
-        key="slider_input",
-        value=st.session_state.renda,
-        on_change=atualiza_pelo_slider
+        key="valor_slider",
+        on_change=slider_mudou
     )
 
 with col_caixa:
@@ -41,13 +43,12 @@ with col_caixa:
         min_value=0.0, 
         max_value=12000.0, 
         step=1.0,
-        key="caixa_input",
-        value=st.session_state.renda,
-        on_change=atualiza_pela_caixa
+        key="valor_caixa",
+        on_change=caixa_mudou
     )
 
-# A variável 'renda' oficial do cálculo assume o valor sincronizado
-renda = st.session_state.renda
+# A renda oficial para o cálculo usa o estado sincronizado
+renda = st.session_state.valor_slider
 
 # 3. Lógica do Score e Regra de Negócio (Cap)
 LIMITE_SUPERIOR = 5637.10
