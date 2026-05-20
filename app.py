@@ -4,37 +4,31 @@ import plotly.graph_objects as go
 import os
 
 # 1. Configuração da página
-st.set_page_config(page_title="Calculadora da Pontuação Pela Renda", layout="centered")
+st.set_page_config(page_title="Simulador JR Consultoria", layout="centered")
 
-# --- SEÇÃO DE BRANDING (LOGO) ---
-# Verifica se a imagem existe na pasta para não dar erro
-if os.path.exists("logo_jr.png"):
-    # Centraliza a logo usando colunas
-    col_l1, col_l2, col_l3 = st.columns([1, 1, 1])
-    with col_l2:
-        st.image("logo_jr.png", width=200)
-else:
-    # Caso você ainda não tenha subido a imagem, ele apenas pula
-    st.write("*(Logo JR Consultoria)*") 
-# --------------------------------
+# --- TOPO DA PÁGINA (BRANDING REMOVIDO DAQUI) ---
 
-st.markdown("<h1 style='text-align: center;'>Calculadora da Pontuação Pela Renda</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #888;'>Arrastar para ajustar ou escrever na caixa de texto a renda</p>", unsafe_allow_html=True)
+# Título Principal (Agora no topo, centralizado)
+st.markdown("<h1 style='text-align: center;'>Calculadora Interativa de Renda</h1>", unsafe_allow_html=True)
 st.write("---")
 
-# --- LÓGICA DE SINCRONIZAÇÃO (BIDIRECIONAL) ---
+# --- LÓGICA DE SINCRONIZAÇÃO (BIDIRECIONAL PERFEITA) ---
+# Inicializamos a memória de cada componente com o mesmo valor padrão
 if 'valor_slider' not in st.session_state:
     st.session_state.valor_slider = 2818.55
 if 'valor_caixa' not in st.session_state:
     st.session_state.valor_caixa = 2818.55
 
+# Quando a barra se move, ela força a caixinha a receber o mesmo valor
 def slider_mudou():
     st.session_state.valor_caixa = st.session_state.valor_slider
 
+# Quando a caixinha é digitada, ela força a barra a ir para a mesma posição
 def caixa_mudou():
     st.session_state.valor_slider = st.session_state.valor_caixa
+# -----------------------------------------------------------
 
-# 2. Entrada de Dados
+# 2. Entrada de Dados (Colunas lado a lado)
 col_slider, col_caixa = st.columns([3, 1])
 
 with col_slider:
@@ -57,6 +51,7 @@ with col_caixa:
         on_change=caixa_mudou
     )
 
+# A renda oficial para o cálculo usa o estado sincronizado
 renda = st.session_state.valor_slider
 
 # 3. Lógica do Score e Regra de Negócio (Cap)
@@ -69,8 +64,8 @@ else:
     pontuacao = 0.0
     zona = "Zona de Outliers / Cap (0)"
 
-# 4. Exibição dos Resultados (Cards)
-st.write("")
+# 4. Exibição dos Resultados (Cards informativos)
+st.write("") # Adiciona um espacinho
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -80,7 +75,7 @@ with col2:
 with col3:
     st.metric(label="Status da Zona", value=zona)
 
-# 5. Construção do Gráfico Dinâmico
+# 5. Construção do Gráfico Dinâmico (Plotly)
 x_curva = np.linspace(0, 12000, 500)
 y_curva = np.where(x_curva <= LIMITE_SUPERIOR, 5.0 - (5.0 / LIMITE_SUPERIOR) * x_curva, 0.0)
 
@@ -113,5 +108,18 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# Rodapé discreto
-st.markdown("<br><hr><center><small>JR Consultoria</small></center>", unsafe_allow_html=True)
+# --- NOVO RODAPÉ DE BRANDING (LOGO NO FINAL SUBSTITUINDO TEXTO) ---
+st.write("---") # Linha separadora discreta
+# Centraliza a logo usando colunas
+col_l1, col_l2, col_l3 = st.columns([1, 1, 1])
+
+with col_l2:
+    if os.path.exists("logo_jr.png"):
+        # Exibe a logo (tamanho ligeiramente menor para rodapé)
+        st.image("logo_jr.png", width=150)
+    else:
+        # Placeholder centralizado caso a imagem não exista
+        st.markdown("<center>*(Logo JR Consultoria)*</center>", unsafe_allow_html=True)
+
+# Texto pequeno e cinza centralizado logo abaixo da imagem
+st.markdown("<center><small style='color: #888;'>JR Consultoria - Inteligência em Dados</small></center>", unsafe_allow_html=True)
