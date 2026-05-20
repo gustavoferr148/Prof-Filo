@@ -1,16 +1,14 @@
-pip install streamlit plotly pandas
-
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 
-# 1. Configuração da página (Tema Escuro nativo do Streamlit ajuda no visual)
+# 1. Configuração da página
 st.set_page_config(page_title="Simulador de Pontuação", layout="centered")
 
 st.title("Calculadora Interativa de Renda")
 st.write("Arraste o slider ou digite um valor de renda para ver a pontuação calculada em tempo real.")
 
-# 2. Entrada de Dados (Slider e Input Numérico integrados)
+# 2. Entrada de Dados
 renda = st.slider(
     "Renda Líquida Per Capita (R$)", 
     min_value=0.0, 
@@ -23,14 +21,13 @@ renda = st.slider(
 LIMITE_SUPERIOR = 5637.10
 
 if renda <= LIMITE_SUPERIOR:
-    # Fórmula: 5 - (coeficiente * renda)
     pontuacao = 5.0 - (5.0 / LIMITE_SUPERIOR) * renda
     zona = "Regular"
 else:
     pontuacao = 0.0
     zona = "Zona de Outliers / Cap (0)"
 
-# 4. Exibição dos Resultados (Cards informativos)
+# 4. Exibição dos Resultados
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -40,14 +37,12 @@ with col2:
 with col3:
     st.metric(label="Status da Zona", value=zona)
 
-# 5. Construção do Gráfico Dinâmico (Plotly)
-# Gerando os pontos da linha para o gráfico de fundo
+# 5. Construção do Gráfico Dinâmico
 x_curva = np.linspace(0, 12000, 500)
 y_curva = np.where(x_curva <= LIMITE_SUPERIOR, 5.0 - (5.0 / LIMITE_SUPERIOR) * x_curva, 0.0)
 
 fig = go.Figure()
 
-# Linha da regra de pontuação
 fig.add_trace(go.Scatter(
     x=x_curva, y=y_curva, 
     mode='lines', 
@@ -55,7 +50,6 @@ fig.add_trace(go.Scatter(
     line=dict(color='#636EFA', width=3)
 ))
 
-# Ponto laranja dinâmico onde o cliente está mexendo
 fig.add_trace(go.Scatter(
     x=[renda], y=[pontuacao], 
     mode='markers', 
@@ -63,7 +57,6 @@ fig.add_trace(go.Scatter(
     marker=dict(color='#EF553B', size=12, line=dict(color='white', width=2))
 ))
 
-# Ajustes de layout para combinar com a interface escura
 fig.update_layout(
     xaxis_title="Renda Líquida Per Capita (R$)",
     yaxis_title="Pontuação",
@@ -75,7 +68,4 @@ fig.update_layout(
     height=350
 )
 
-# Renderiza o gráfico na tela
 st.plotly_chart(fig, use_container_width=True)
-
-streamlit run app.py
