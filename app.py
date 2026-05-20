@@ -4,9 +4,10 @@ import plotly.graph_objects as go
 import os
 
 # 1. Configuração da página
-st.set_page_config(page_title="Simulador JR Consultoria", layout="centered")
+# Usamos 'centered' para manter a largura fixa e profissional.
+st.set_page_config(page_title="Simulador de Pontuação", layout="centered")
 
-# --- TOPO DA PÁGINA (BRANDING REMOVIDO DAQUI) ---
+# --- TOPO DA PÁGINA ---
 
 # Título Principal (Agora no topo, centralizado)
 st.markdown("<h1 style='text-align: center;'>Calculadora Interativa de Renda</h1>", unsafe_allow_html=True)
@@ -108,18 +109,17 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# --- NOVO RODAPÉ DE BRANDING (LOGO NO FINAL SUBSTITUINDO TEXTO) ---
+# --- NOVO RODAPÉ DE BRANDING (LOGO AMPLIADA E SOZINHA NO FINAL) ---
 st.write("---") # Linha separadora discreta
-# Centraliza a logo usando colunas
-col_l1, col_l2, col_l3 = st.columns([1, 1, 1])
+# Centraliza a logo usando colunas com proporções ajustadas para uma imagem maior [1, 2, 1]
+col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
 
 with col_l2:
     if os.path.exists("logo_jr.png"):
-        # Exibe a logo (tamanho ligeiramente menor para rodapé)
-        st.image("logo_jr.png", width=150)
+        # Exibe a logo (aumentamos a largura de 150 para 300)
+        st.image("logo_jr.png", width=300)
     else:
         # Placeholder centralizado caso a imagem não exista
         st.markdown("<center>*(Logo JR Consultoria)*</center>", unsafe_allow_html=True)
 
-# Texto pequeno e cinza centralizado logo abaixo da imagem
-st.markdown("<center><small style='color: #888;'>JR Consultoria - Inteligência em Dados</small></center>", unsafe_allow_html=True)
+# REMOVEMOS AQUI A LINHA QUE EXIBIA O TEXTO "Inteligência em Dados"
