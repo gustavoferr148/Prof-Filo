@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import os
 
 # 1. Configuração da página
-st.set_page_config(page_title="Simulador JR Consultoria", layout="centered")
+st.set_page_config(page_title="Calculadora da Pontuação Pela Renda", layout="centered")
 
 # --- SEÇÃO DE BRANDING (LOGO) ---
 # Verifica se a imagem existe na pasta para não dar erro
@@ -114,4 +114,4 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 # Rodapé discreto
-st.markdown("<br><hr><center><small>JR Consultoria - Inteligência em Dados</small></center>", unsafe_allow_html=True)
+st.markdown("<br><hr><center><small>JR Consultoria</small></center>", unsafe_allow_html=True)
