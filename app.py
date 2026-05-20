@@ -10,7 +10,7 @@ st.set_page_config(page_title="Simulador de Pontuação", layout="centered")
 # --- TOPO DA PÁGINA ---
 
 # Título Principal (Agora no topo, centralizado)
-st.markdown("<h1 style='text-align: center;'>Calculadora Interativa de Renda</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Matriz de Pontuação de Renda</h1>", unsafe_allow_html=True)
 st.write("---")
 
 # --- LÓGICA DE SINCRONIZAÇÃO (BIDIRECIONAL PERFEITA) ---
