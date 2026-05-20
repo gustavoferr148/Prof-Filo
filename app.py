@@ -18,8 +18,8 @@ else:
     st.write("*(Logo JR Consultoria)*") 
 # --------------------------------
 
-st.markdown("<h1 style='text-align: center;'>Calculadora Interativa de Renda</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #888;'>Solução personalizada desenvolvida pela JR Consultoria</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Calculadora da Pontuação Pela Renda</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #888;'>Arrastar para ajustar ou escrever na caixa de texto a renda</p>", unsafe_allow_html=True)
 st.write("---")
 
 # --- LÓGICA DE SINCRONIZAÇÃO (BIDIRECIONAL) ---
