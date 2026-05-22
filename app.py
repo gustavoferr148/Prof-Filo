@@ -1,3 +1,5 @@
+
+
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
@@ -5,7 +7,7 @@ import os
 
 # 1. Configuração da página
 # Usamos 'centered' para manter a largura fixa e profissional.
-st.set_page_config(page_title="Simulador de Pontuação", layout="centered")
+st.set_page_config(page_title="Matriz de Pontuação de Renda", layout="centered")
 
 # --- TOPO DA PÁGINA ---
 
